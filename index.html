@@ -403,7 +403,9 @@ nav::after {
   box-shadow: 0 4px 15px rgba(139,92,246,0.4);
 }
 .btn-join-card.active:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,0.55); }
-.btn-join-card.done { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.3); cursor: default; }
+.btn-join-card.done { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.3); cursor: pointer; }
+.btn-join-card.done:hover { background: rgba(255,45,85,0.12); color: var(--crimson); border-color: rgba(255,45,85,0.3); }
+.btn-join-card.done:hover::after { content: ' — עזוב?'; }
 .btn-join-card.disabled { background: var(--raised); color: var(--text3); cursor: not-allowed; }
 
 /* DISCORD BADGE on card */
@@ -747,19 +749,20 @@ footer::before {
   </div>
 </div>
 
-<!-- DISCORD LOGIN -->
+<!-- DISCORD LOGIN — OAuth2 -->
 <div class="overlay" id="discordModal">
   <div class="modal" style="max-width:380px;text-align:center">
     <button class="modal-x" onclick="closeModal('discordModal')">×</button>
-    <svg width="52" height="52" viewBox="0 0 24 24" fill="#5865F2" style="margin-bottom:12px"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-    <div class="modal-title" style="justify-content:center;margin-bottom:8px">כניסה עם Discord</div>
-    <p style="font-size:0.85rem;color:var(--text2);margin-bottom:20px;line-height:1.6">הכנס את שם המשתמש שלך ב-Discord כדי להירשם לטורנירים</p>
-    <div class="fg" style="text-align:right">
-      <label class="fl">Discord Username</label>
-      <input class="fi" type="text" id="dcUser" placeholder="username" dir="ltr">
-    </div>
-    <button class="btn btn-discord btn-full btn-lg" style="margin-top:4px" onclick="discordLogin()">כניסה 🎮</button>
-    <p style="font-size:0.72rem;color:var(--text3);margin-top:12px">בגרסה מלאה זה מתחבר ישירות לחשבון Discord שלך</p>
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="#5865F2" style="margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(88,101,242,0.5))"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+    <div class="modal-title" style="justify-content:center;font-size:1.3rem;margin-bottom:8px">כניסה עם Discord</div>
+    <p style="font-size:0.88rem;color:var(--text2);margin-bottom:28px;line-height:1.7">
+      לחץ על הכפתור — Discord יפתח ותתחבר עם החשבון האמיתי שלך.<br>
+      <span style="font-size:0.75rem;color:var(--text3)">אנחנו מקבלים רק שם משתמש ותמונה.</span>
+    </p>
+    <button class="btn btn-discord btn-full btn-lg" onclick="closeModal('discordModal');startDiscordOAuth()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      התחבר עם Discord
+    </button>
   </div>
 </div>
 
@@ -874,14 +877,9 @@ footer::before {
     <div class="join-hero" id="jHero"></div>
     <div class="modal-title" id="jTitle" style="font-size:1rem"></div>
     <div class="join-meta" id="jMeta"></div>
-    <div class="fg">
-      <label class="fl">Discord Username להרשמה</label>
-      <input class="fi" id="jDcUser" placeholder="username" dir="ltr">
-    </div>
-    <div id="jRoleNote" style="display:none;background:rgba(88,101,242,0.08);border:1px solid rgba(88,101,242,0.2);border-radius:8px;padding:10px 12px;font-size:0.78rem;color:#7c8af5;margin-bottom:4px">
-      🤖 לאחר ההרשמה תקבל אוטומטית רול בשרת Discord!
-    </div>
+    <div id="jUserInfo"></div>
     <button class="btn btn-gold btn-full btn-lg" style="margin-top:12px" id="jBtn" onclick="confirmJoin()">🎮 אני בפנים!</button>
+    <button class="btn btn-full" id="jLeaveBtn" onclick="confirmLeaveFromModal()" style="margin-top:8px;display:none;background:rgba(255,45,85,0.1);color:var(--crimson);border:1px solid rgba(255,45,85,0.3);border-radius:8px;padding:10px;font-family:var(--font-ui);font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(255,45,85,0.2)'" onmouseout="this.style.background='rgba(255,45,85,0.1)'">🚪 עזוב טורניר</button>
   </div>
 </div>
 
@@ -896,25 +894,25 @@ footer::before {
 
 <footer>
   <div class="footer-logo">⚔ ARENA</div>
-  <div>פלטפורמת גיימינג ישראלית © 2025 · Powered by passion</div>
+  <div>פלטפורמת גיימינג ישראלית © 2026 · Powered by passion</div>
 </footer>
 
 </div><!-- end #app -->
 
 <!-- ════════════════════════════════════════
-     JAVASCRIPT
+     JAVASCRIPT — Discord OAuth2
 ════════════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════════
-// CONFIG — הכנס את ה-Token של הבוט כאן:
-// ══════════════════════════════════════════
-const BOT_TOKEN  = "MTQ3NDM3OTY2NTYwNjA0OTk5OA.GIHuAm.Xc9-j3YzLZ8K7Zc8isFUgs10uII6cJWV1VTRrg";            // <-- הטוקן שלך כאן
-const GUILD_ID   = "1474379041053347883";
-const ROLE_ID    = "1474379702729838685";
-// ══════════════════════════════════════════
-
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const CLIENT_ID   = "1474379665606049998";
+const REDIRECT    = "https://danglitchers.github.io/Tourney-Zone/";
+const GUILD_ID    = "1474379041053347883";
+const ROLE_ID     = "1474379702729838685";
 const ADMIN_EMAIL = "danpressdee@gmail.com";
 const ADMIN_PASS  = "thetornirspider";
+// ══════════════════════════════════════════════
 
 const EMOJIS = { Fortnite:'🎯', Warzone:'💥', Valorant:'🔫', CS2:'💣', Apex:'🎮', Minecraft:'⛏️', 'EA FC':'⚽', Other:'🕹️' };
 const STATUS = {
@@ -923,14 +921,142 @@ const STATUS = {
   closed: { cls:'s-closed', txt:'סגור' },
 };
 
-// ── STATE ──────────────────────────────────
+// ── STATE ──────────────────────────────────────
 let data = {
   tournaments:   JSON.parse(localStorage.getItem('az_t') || '[]'),
   registrations: JSON.parse(localStorage.getItem('az_r') || '{}'),
 };
-let ui = { isAdmin:false, dcUser:null, editId:null, joinId:null, curFilter:'all' };
+let ui = {
+  isAdmin: false,
+  dcUser: null,      // { id, username, avatar, accessToken }
+  editId: null,
+  joinId: null,
+  curFilter: 'all',
+};
 
-// ── CANVAS BG ─────────────────────────────
+// ══════════════════════════════════════════════
+// DISCORD OAUTH2
+// ══════════════════════════════════════════════
+
+function startDiscordOAuth() {
+  // שמור state למניעת CSRF
+  const state = Math.random().toString(36).slice(2);
+  sessionStorage.setItem('dc_state', state);
+
+  const params = new URLSearchParams({
+    client_id:     CLIENT_ID,
+    redirect_uri:  REDIRECT,
+    response_type: 'token',            // Implicit flow — ללא backend
+    scope:         'identify guilds.join',
+    state:         state,
+  });
+  window.location.href = `https://discord.com/oauth2/authorize?${params}`;
+}
+
+async function fetchDiscordUser(accessToken) {
+  const res = await fetch('https://discord.com/api/users/@me', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch user');
+  return res.json();
+}
+
+async function joinGuildWithRole(accessToken, userId) {
+  // גרום למשתמש להצטרף לשרת (אם עוד לא שם)
+  // דורש bot token בצד שרת — הרול יינתן ע"י Bot לאחר join
+  // כאן נרשום את ה-userId ונסמן שצריך רול
+  console.log('[OAuth] User joined with userId:', userId);
+}
+
+// ── Handle OAuth2 Callback ─────────────────────
+async function handleOAuthCallback() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get('access_token');
+  const state       = params.get('state');
+  const tokenType   = params.get('token_type');
+
+  if (!accessToken) return;
+
+  // נקה URL
+  history.replaceState(null, '', window.location.pathname);
+
+  // אמת state
+  const savedState = sessionStorage.getItem('dc_state');
+  if (state && savedState && state !== savedState) {
+    toast('שגיאת אבטחה, נסה שוב', 'err');
+    return;
+  }
+  sessionStorage.removeItem('dc_state');
+
+  // הצג loading
+  showOAuthLoading(true);
+
+  try {
+    const user = await fetchDiscordUser(accessToken);
+    ui.dcUser = {
+      id:          user.id,
+      username:    user.username,
+      globalName:  user.global_name || user.username,
+      avatar:      user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator||0) % 5}.png`,
+      accessToken,
+    };
+
+    // שמור session
+    sessionStorage.setItem('dc_session', JSON.stringify(ui.dcUser));
+
+    updateNav();
+    render();
+    toast(`שלום, ${ui.dcUser.globalName}! 🎮`);
+  } catch(e) {
+    toast('שגיאה בכניסה עם Discord', 'err');
+    console.error(e);
+  } finally {
+    showOAuthLoading(false);
+  }
+}
+
+function showOAuthLoading(show) {
+  let el = document.getElementById('oauthLoading');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'oauthLoading';
+    el.style.cssText = `
+      position:fixed;inset:0;z-index:9998;
+      background:rgba(2,4,8,0.92);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+      font-family:var(--font-ui);color:var(--text2);font-size:1rem;
+    `;
+    el.innerHTML = `
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="#5865F2">
+        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+      </svg>
+      <div>מתחבר ל-Discord...</div>
+      <div style="width:40px;height:3px;background:var(--raised);border-radius:2px;overflow:hidden">
+        <div style="height:100%;background:var(--cyan);border-radius:2px;animation:loadBar 1.2s ease-in-out infinite"></div>
+      </div>
+      <style>@keyframes loadBar{0%{width:0%;margin-right:100%}50%{width:60%;margin-right:0}100%{width:0%;margin-left:100%}}</style>
+    `;
+    document.body.appendChild(el);
+  }
+  el.style.display = show ? 'flex' : 'none';
+}
+
+// ── RESTORE SESSION ────────────────────────────
+function restoreSession() {
+  const saved = sessionStorage.getItem('dc_session');
+  if (saved) {
+    try { ui.dcUser = JSON.parse(saved); } catch {}
+  }
+}
+
+// ══════════════════════════════════════════════
+// CANVAS BG
+// ══════════════════════════════════════════════
 (function() {
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
@@ -945,22 +1071,16 @@ let ui = { isAdmin:false, dcUser:null, editId:null, joinId:null, curFilter:'all'
   });
   function draw() {
     ctx.clearRect(0,0,W,H);
-    // Grid
-    ctx.strokeStyle='rgba(0,200,255,0.025)';
-    ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(0,200,255,0.025)'; ctx.lineWidth=1;
     for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
     for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-    // Particles
     particles.forEach(p=>{
       p.x+=p.vx; p.y+=p.vy; p.a+=0.005;
       if(p.x<0)p.x=W; if(p.x>W)p.x=0;
       if(p.y<0)p.y=H; if(p.y>H)p.y=0;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(0,200,255,${0.15+0.1*Math.sin(p.a)})`;
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,200,255,${0.15+0.1*Math.sin(p.a)})`; ctx.fill();
     });
-    // Glow orbs
     [[W*0.8,H*0.1,'rgba(139,92,246,0.06)'],[W*0.1,H*0.7,'rgba(0,200,255,0.05)'],[W*0.5,H*0.5,'rgba(255,215,0,0.025)']].forEach(([x,y,c])=>{
       const g=ctx.createRadialGradient(x,y,0,x,y,350);
       g.addColorStop(0,c); g.addColorStop(1,'transparent');
@@ -971,14 +1091,16 @@ let ui = { isAdmin:false, dcUser:null, editId:null, joinId:null, curFilter:'all'
   draw();
 })();
 
-// ── MODAL HELPERS ─────────────────────────
+// ══════════════════════════════════════════════
+// MODAL HELPERS
+// ══════════════════════════════════════════════
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.overlay').forEach(el=>{
   el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); });
 });
 
-// ── TOAST ─────────────────────────────────
+// ── TOAST ──────────────────────────────────────
 let toastT;
 function toast(msg,type='ok'){
   const el=document.getElementById('toast');
@@ -988,7 +1110,9 @@ function toast(msg,type='ok'){
   toastT=setTimeout(()=>el.classList.remove('show'),3200);
 }
 
-// ── ADMIN LOGIN ───────────────────────────
+// ══════════════════════════════════════════════
+// ADMIN LOGIN
+// ══════════════════════════════════════════════
 function adminLogin(){
   const e=document.getElementById('aEmail').value.trim();
   const p=document.getElementById('aPass').value;
@@ -1007,43 +1131,38 @@ function adminLogin(){
   }
 }
 
-// ── DISCORD LOGIN ─────────────────────────
-function discordLogin(){
-  const u=document.getElementById('dcUser').value.trim();
-  if(!u){toast('הכנס username','err');return;}
-  ui.dcUser=u;
-  closeModal('discordModal');
-  updateNav();
-  toast(`שלום, ${u}! מוכן לפעולה 🎮`);
-}
-
 function logout(){
   ui.isAdmin=false; ui.dcUser=null;
+  sessionStorage.removeItem('dc_session');
   document.getElementById('heroSection').style.display='';
   document.getElementById('publicSection').style.display='';
   document.getElementById('adminSection').classList.remove('on');
-  updateNav();
-  render();
+  updateNav(); render();
   toast('התנתקת');
 }
+
+// ── NAV ────────────────────────────────────────
+const DISCORD_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>`;
 
 function updateNav(){
   const nav=document.getElementById('navRight');
   if(ui.isAdmin){
     nav.innerHTML=`<div class="user-pill"><div class="user-pill-avatar">👑</div><span class="user-pill-name">Admin</span></div><button class="btn btn-danger" onclick="logout()">יציאה</button>`;
   } else if(ui.dcUser){
-    nav.innerHTML=`<div class="user-pill"><div class="user-pill-avatar">${ui.dcUser[0].toUpperCase()}</div><span class="user-pill-name">${ui.dcUser}</span></div><button class="btn btn-danger" onclick="logout()">יציאה</button>`;
+    const av = ui.dcUser.avatar
+      ? `<img src="${ui.dcUser.avatar}" style="width:30px;height:30px;border-radius:50%">`
+      : `<div class="user-pill-avatar">${ui.dcUser.username[0].toUpperCase()}</div>`;
+    nav.innerHTML=`<div class="user-pill">${av}<span class="user-pill-name">${ui.dcUser.globalName||ui.dcUser.username}</span></div><button class="btn btn-danger" onclick="logout()">יציאה</button>`;
   } else {
     nav.innerHTML=`
       <button class="btn btn-ghost" onclick="openModal('adminModal')">כניסת מנהל</button>
-      <button class="btn btn-discord" onclick="openModal('discordModal')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.030z"/></svg>
-        כניסה עם Discord
-      </button>`;
+      <button class="btn btn-discord" onclick="startDiscordOAuth()">${DISCORD_SVG} כניסה עם Discord</button>`;
   }
 }
 
-// ── UPLOAD ────────────────────────────────
+// ══════════════════════════════════════════════
+// IMAGE UPLOAD
+// ══════════════════════════════════════════════
 function uploadImg(input, prevId, dataId){
   const f=input.files[0]; if(!f) return;
   const r=new FileReader();
@@ -1055,7 +1174,9 @@ function uploadImg(input, prevId, dataId){
   r.readAsDataURL(f);
 }
 
-// ── CREATE / EDIT ─────────────────────────
+// ══════════════════════════════════════════════
+// CREATE / EDIT TOURNAMENT
+// ══════════════════════════════════════════════
 function openCreate(){
   ui.editId=null;
   document.getElementById('cIcon').textContent='🏆';
@@ -1086,8 +1207,7 @@ function saveTournament(){
     desc:document.getElementById('tDesc').value,
     logo:document.getElementById('tLogo').value,
     thumb:document.getElementById('tThumb').value,
-    guildId: GUILD_ID,
-    roleId:  ROLE_ID,
+    guildId: GUILD_ID, roleId: ROLE_ID,
   };
   if(ui.editId){
     const i=data.tournaments.findIndex(x=>x.id===ui.editId);
@@ -1146,15 +1266,19 @@ function viewRegistrants(id){
       <ul class="reg-list">${regs.map((r,i)=>`
         <li class="reg-item">
           <span class="reg-num">${i+1}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.030z"/></svg>
-          <strong>${r.dc}</strong>
+          ${r.avatar?`<img src="${r.avatar}" style="width:24px;height:24px;border-radius:50%">`:'<span>👤</span>'}
+          <strong>${r.globalName||r.dc}</strong>
+          <span style="color:var(--text3);font-size:0.72rem">@${r.dc}</span>
           <span class="reg-date">${new Date(r.at).toLocaleDateString('he-IL')}</span>
-        </li>`).join('')}</ul>`;
+        </li>`).join('')}
+      </ul>`;
   }
   openModal('regsModal');
 }
 
-// ── PUBLIC RENDER ─────────────────────────
+// ══════════════════════════════════════════════
+// PUBLIC RENDER
+// ══════════════════════════════════════════════
 function render(f){
   if(f) ui.curFilter=f;
   const grid=document.getElementById('tGrid');
@@ -1170,14 +1294,20 @@ function render(f){
     const full=regs>=max;
     const sm=STATUS[t.status]||STATUS.open;
     const em=EMOJIS[t.game]||'🕹️';
-    const joined=ui.dcUser&&(data.registrations[t.id]||[]).some(r=>r.dc===ui.dcUser);
+    const userId=ui.dcUser?.id;
+    const joined=userId&&(data.registrations[t.id]||[]).some(r=>r.userId===userId);
     const pct=Math.min(regs/max*100,100);
-    let btnCls='btn-join-card', btnTxt;
-    if(joined){btnCls+=' done';btnTxt='✅ נרשמת';}
-    else if(full||t.status==='closed'){btnCls+=' disabled';btnTxt=full?'🔒 מלא':'🔒 סגור';}
-    else{btnCls+=' active';btnTxt='הצטרף +';}
+    let btnCls='btn-join-card', btnTxt, btnFn;
+    if(joined){
+      btnCls+=' done'; btnTxt='✅ נרשמת — עזוב?';
+      btnFn=`confirmLeave('${t.id}')`;
+    } else if(full||t.status==='closed'){
+      btnCls+=' disabled'; btnTxt=full?'🔒 מלא':'🔒 סגור'; btnFn='';
+    } else {
+      btnCls+=' active'; btnTxt='הצטרף +'; btnFn=`openJoin('${t.id}')`;
+    }
     return `
-    <div class="t-card" onclick="openJoin('${t.id}')">
+    <div class="t-card" onclick="${joined?`confirmLeave('${t.id}')`:`openJoin('${t.id}')`}">
       <div class="t-thumb">
         ${t.thumb?`<img class="t-thumb-img" src="${t.thumb}" alt="">`:`<div class="t-thumb-placeholder">${em}</div>`}
         <div class="t-thumb-overlay"></div>
@@ -1189,10 +1319,7 @@ function render(f){
       <div class="t-body">
         <div class="t-top">
           <div class="t-logo">${t.logo?`<img src="${t.logo}" alt="">`:`<span>${em}</span>`}</div>
-          <div>
-            <div class="t-name">${t.name}</div>
-            <div class="t-organizer">⚔ ARENA</div>
-          </div>
+          <div><div class="t-name">${t.name}</div><div class="t-organizer">⚔ ARENA</div></div>
         </div>
         <div class="t-meta">
           <div class="t-meta-item"><div class="t-meta-label">📅 תאריך</div><div class="t-meta-value">${fmtDate(t.date)}</div></div>
@@ -1205,8 +1332,8 @@ function render(f){
             <div class="t-progress-label"><span>${regs} נרשמו</span><span>${max}</span></div>
             <div class="t-progress-bar"><div class="t-progress-fill ${full?'fill-full':'fill-open'}" style="width:${pct}%"></div></div>
           </div>
-          <button class="${btnCls}" onclick="event.stopPropagation();openJoin('${t.id}')"
-            ${(full||t.status==='closed')&&!joined?'disabled':''}>${btnTxt}</button>
+          <button class="${btnCls}" onclick="event.stopPropagation();${btnFn}"
+            ${(full||t.status==='closed')&&!joined?'disabled':''} >${btnTxt}</button>
         </div>
       </div>
     </div>`;
@@ -1239,7 +1366,9 @@ function animN(id,target){
   const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},35);
 }
 
-// ── ADMIN RENDER ──────────────────────────
+// ══════════════════════════════════════════════
+// ADMIN RENDER
+// ══════════════════════════════════════════════
 function renderAdminGrid(){
   const grid=document.getElementById('adminGrid');
   if(!data.tournaments.length){
@@ -1262,7 +1391,7 @@ function renderAdminGrid(){
       <div class="admin-card-tags">
         <span class="status-tag ${sm.cls}" style="position:static">${sm.txt}</span>
         <span style="font-size:0.75rem;color:var(--text3)">${regs} נרשמו</span>
-        <span style="font-size:0.7rem;color:#7c8af5">🤖 Discord</span>
+        <span style="font-size:0.7rem;color:#7c8af5">🔐 OAuth2</span>
       </div>
       <div class="admin-card-actions">
         <button class="btn-sm edit" onclick="editTournament('${t.id}')">✏️ עריכה</button>
@@ -1273,9 +1402,17 @@ function renderAdminGrid(){
   }).join('');
 }
 
-// ── JOIN ──────────────────────────────────
+// ══════════════════════════════════════════════
+// JOIN / LEAVE
+// ══════════════════════════════════════════════
 function openJoin(id){
   if(ui.isAdmin) return;
+  if(!ui.dcUser){
+    // לא מחובר — שלח ל-OAuth
+    sessionStorage.setItem('pending_join', id);
+    startDiscordOAuth();
+    return;
+  }
   const t=data.tournaments.find(x=>x.id===id); if(!t) return;
   ui.joinId=id;
   const hero=document.getElementById('jHero');
@@ -1288,77 +1425,102 @@ function openJoin(id){
     <div class="join-meta-item"><div class="join-meta-label">🏅 פרס</div><div class="join-meta-value" style="color:var(--gold-dim)">${t.prize||'TBD'}</div></div>
     <div class="join-meta-item"><div class="join-meta-label">👥 מקומות</div><div class="join-meta-value">${regs}/${t.max||64}</div></div>
   `;
-  const dcInput=document.getElementById('jDcUser');
-  dcInput.value=ui.dcUser||'';
-  dcInput.readOnly=!!ui.dcUser;
-  document.getElementById('jRoleNote').style.display='block';
-  const joined=ui.dcUser&&(data.registrations[id]||[]).some(r=>r.dc===ui.dcUser);
-  const btn=document.getElementById('jBtn');
+
+  // הצג שם המשתמש
+  document.getElementById('jUserInfo').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;background:var(--raised);border:1px solid var(--edge);border-radius:10px;padding:10px 14px;margin-bottom:12px">
+      ${ui.dcUser.avatar?`<img src="${ui.dcUser.avatar}" style="width:32px;height:32px;border-radius:50%">`:\`<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:700">${ui.dcUser.username[0].toUpperCase()}</div>\`}
+      <div>
+        <div style="font-weight:700;font-size:0.9rem">${ui.dcUser.globalName||ui.dcUser.username}</div>
+        <div style="font-size:0.72rem;color:var(--text3)">@${ui.dcUser.username}</div>
+      </div>
+      <div style="margin-right:auto;font-size:0.7rem;color:var(--green);background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.2);border-radius:6px;padding:3px 8px">✓ מחובר</div>
+    </div>
+  `;
+
+  const leaveBtn=document.getElementById('jLeaveBtn');
+  const joinBtn=document.getElementById('jBtn');
+  const userId=ui.dcUser.id;
+  const joined=(data.registrations[id]||[]).some(r=>r.userId===userId);
   const full=regs>=(t.max||64);
-  if(joined){btn.textContent='✅ כבר נרשמת!';btn.disabled=true;}
-  else if(t.status==='closed'){btn.textContent='🔒 הרשמה סגורה';btn.disabled=true;}
-  else if(full){btn.textContent='🔒 הטורניר מלא';btn.disabled=true;}
-  else{btn.textContent='🎮 אני בפנים!';btn.disabled=false;}
+
+  if(joined){
+    joinBtn.textContent='✅ כבר נרשמת!'; joinBtn.disabled=true; joinBtn.style.opacity='0.5';
+    leaveBtn.style.display='block';
+  } else {
+    leaveBtn.style.display='none';
+    if(t.status==='closed'){joinBtn.textContent='🔒 הרשמה סגורה';joinBtn.disabled=true;joinBtn.style.opacity='0.5';}
+    else if(full){joinBtn.textContent='🔒 הטורניר מלא';joinBtn.disabled=true;joinBtn.style.opacity='0.5';}
+    else{joinBtn.textContent='🎮 אני בפנים!';joinBtn.disabled=false;joinBtn.style.opacity='1';}
+  }
   openModal('joinModal');
 }
 
 async function confirmJoin(){
   const id=ui.joinId;
   const t=data.tournaments.find(x=>x.id===id); if(!t) return;
-  const dc=document.getElementById('jDcUser').value.trim();
-  if(!dc){toast('חובה להכניס Discord username!','err');return;}
+  if(!ui.dcUser){toast('התחבר תחילה עם Discord','err');return;}
   if(!data.registrations[id]) data.registrations[id]=[];
-  if(data.registrations[id].some(r=>r.dc===dc)){toast('כבר נרשמת!','err');return;}
+  const userId=ui.dcUser.id;
+  if(data.registrations[id].some(r=>r.userId===userId)){toast('כבר נרשמת!','err');return;}
   if(data.registrations[id].length>=(t.max||64)){toast('הטורניר מלא!','err');return;}
-  data.registrations[id].push({dc,at:new Date().toISOString()});
-  ui.dcUser=dc;
+
+  data.registrations[id].push({
+    userId,
+    dc:         ui.dcUser.username,
+    globalName: ui.dcUser.globalName||ui.dcUser.username,
+    avatar:     ui.dcUser.avatar||null,
+    at:         new Date().toISOString(),
+  });
   save();
-  if(BOT_TOKEN && GUILD_ID && ROLE_ID) await assignRole(GUILD_ID,ROLE_ID,dc);
   closeModal('joinModal');
-  render(); updateNav();
-  toast(`נרשמת ל-${t.name}! 🎉 ${ROLE_ID?'הרול ינתן בשרת':''}`, 'ok');
+  render();
+  toast(`נרשמת ל-${t.name}! 🎉`);
 }
 
-// ── DISCORD BOT ───────────────────────────
-/*
-  ════════════════════════════════════════════════════════
-  BACKEND CODE (Node.js + discord.js) — הרצה בצד שרת:
-
-  const { Client, GatewayIntentBits } = require('discord.js');
-  const client = new Client({ intents: ['Guilds','GuildMembers'] });
-
-  async function assignRoleToUser(guildId, roleId, username) {
-    await client.login(BOT_TOKEN);
-    const guild = await client.guilds.fetch(guildId);
-    await guild.members.fetch();
-    const member = guild.members.cache.find(m =>
-      m.user.username === username ||
-      m.user.tag === username
-    );
-    if (member) {
-      await member.roles.add(roleId);
-      console.log(`✅ Role assigned to ${username}`);
-    } else {
-      console.log(`❌ Member not found: ${username}`);
-    }
-  }
-
-  assignRoleToUser(GUILD_ID, ROLE_ID, discordUsername);
-  ════════════════════════════════════════════════════════
-*/
-async function assignRole(guildId, roleId, username) {
-  console.log(`[Discord Bot] Assigning role ${roleId} in ${guildId} to ${username}`);
-  // Browser → CORS blocks direct API calls. Use a backend endpoint.
+async function confirmLeave(id){
+  if(!ui.dcUser){toast('התחבר תחילה','err');return;}
+  const t=data.tournaments.find(x=>x.id===id); if(!t) return;
+  if(!confirm(`לעזוב את "${t.name}"?`)) return;
+  const userId=ui.dcUser.id;
+  data.registrations[id]=(data.registrations[id]||[]).filter(r=>r.userId!==userId);
+  save();
+  closeModal('joinModal');
+  render();
+  toast(`עזבת את ${t.name}`);
 }
 
-// ── STORAGE ───────────────────────────────
+function confirmLeaveFromModal(){
+  if(ui.joinId) confirmLeave(ui.joinId);
+}
+
+// ══════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════
 function save(){
   localStorage.setItem('az_t', JSON.stringify(data.tournaments));
   localStorage.setItem('az_r', JSON.stringify(data.registrations));
 }
 
-// ── INIT ──────────────────────────────────
-render();
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+async function init(){
+  restoreSession();
+  await handleOAuthCallback();
+
+  // אם היה pending join לפני ה-OAuth
+  const pendingJoin = sessionStorage.getItem('pending_join');
+  if(pendingJoin && ui.dcUser){
+    sessionStorage.removeItem('pending_join');
+    setTimeout(()=>openJoin(pendingJoin), 500);
+  }
+
+  updateNav();
+  render();
+}
+
+init();
 </script>
 </body>
 </html>
