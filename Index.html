@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TourneyZone - טורנירי גיימינג</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b12;
+  --bg2: #0d1220;
+  --bg3: #111827;
+  --card: #141c2e;
+  --card2: #1a2540;
+  --accent: #00e5ff;
+  --accent2: #7c3aed;
+  --accent3: #f59e0b;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --border: rgba(0,229,255,0.15);
+  --glow: 0 0 30px rgba(0,229,255,0.2);
+  --red: #ef4444;
+  --green: #10b981;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+/* ── BACKGROUND EFFECTS ── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+.bg-orb {
+  position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0;
+}
+.orb1 { width:400px; height:400px; background:rgba(124,58,237,0.12); top:-100px; right:-100px; }
+.orb2 { width:300px; height:300px; background:rgba(0,229,255,0.08); bottom:10%; left:-80px; }
+.orb3 { width:200px; height:200px; background:rgba(245,158,11,0.06); top:50%; left:50%; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,11,18,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.6rem; font-weight: 700; letter-spacing: 2px;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(0,229,255,0.5);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo span { color: var(--text); }
+.nav-actions { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  padding: 8px 18px; border-radius: 8px; font-family: 'Heebo', sans-serif;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none;
+  transition: all 0.2s;
+}
+.btn-discord {
+  background: #5865F2;
+  color: white;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-discord:hover { background: #4752c4; transform: translateY(-1px); }
+.btn-admin { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-admin:hover { border-color: var(--accent); color: var(--accent); }
+.user-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px 4px 4px;
+  font-size: 0.85rem;
+}
+.user-chip img { width:28px; height:28px; border-radius:50%; }
+.btn-logout {
+  background: none; border: none; color: var(--text2);
+  cursor: pointer; font-size: 0.8rem; padding: 4px 8px;
+  border-radius: 6px; transition: all 0.2s; margin-right: 4px;
+}
+.btn-logout:hover { color: var(--red); background: rgba(239,68,68,0.1); }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  padding: 130px 2rem 60px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,229,255,0.08);
+  border: 1px solid rgba(0,229,255,0.25);
+  border-radius: 20px; padding: 6px 16px; margin-bottom: 24px;
+  font-size: 0.8rem; color: var(--accent); letter-spacing: 1px; text-transform: uppercase;
+}
+.hero-badge::before { content: '●'; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 700; line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 1.1rem; color: var(--text2); max-width: 500px; margin: 0 auto 32px; }
+.hero-stats {
+  display: inline-flex; gap: 32px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 32px; margin-top: 8px;
+}
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.75rem; color: var(--text2); }
+
+/* ── SECTION ── */
+.section {
+  position: relative; z-index: 1;
+  padding: 40px 2rem 60px;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;
+}
+.section-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.6rem; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::before {
+  content: ''; width: 4px; height: 24px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius: 2px;
+}
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--text2);
+  transition: all 0.2s; font-family: 'Heebo', sans-serif;
+}
+.filter-btn.active, .filter-btn:hover {
+  background: var(--accent); color: #000; border-color: var(--accent);
+}
+
+/* ── TOURNAMENT GRID ── */
+.tournaments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.tournament-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  transition: all 0.3s; cursor: pointer;
+  position: relative;
+}
+.tournament-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,229,255,0.4);
+  box-shadow: var(--glow);
+}
+.card-thumbnail {
+  width: 100%; height: 180px; object-fit: cover;
+  background: linear-gradient(135deg, var(--bg3), var(--card2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; position: relative;
+}
+.card-thumbnail img { width:100%; height:100%; object-fit:cover; }
+.card-thumbnail-placeholder { width:100%; height:180px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:linear-gradient(135deg,var(--bg3),var(--card2)); }
+.game-badge {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(8,11,18,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 4px 10px; font-size: 0.75rem; color: var(--accent);
+  font-weight: 600;
+}
+.status-badge {
+  position: absolute; top: 12px; left: 12px;
+  border-radius: 20px; padding: 3px 10px; font-size: 0.7rem; font-weight: 700;
+}
+.status-open { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid rgba(16,185,129,0.4); }
+.status-soon { background: rgba(245,158,11,0.2); color: var(--accent3); border: 1px solid rgba(245,158,11,0.4); }
+.status-closed { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.card-body { padding: 16px; }
+.card-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.card-logo { width:40px; height:40px; border-radius:10px; object-fit:cover; background:var(--card2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; overflow:hidden; }
+.card-logo img { width:100%; height:100%; object-fit:cover; }
+.card-title { font-weight: 700; font-size: 1rem; line-height: 1.3; }
+.card-organizer { font-size: 0.75rem; color: var(--text2); }
+.card-details { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.detail-item { background: var(--bg3); border-radius:8px; padding:8px; }
+.detail-label { font-size:0.65rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+.detail-value { font-size:0.85rem; font-weight:600; }
+.detail-value.prize { color: var(--accent3); }
+.card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid var(--border); }
+.participants { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text2); }
+.btn-join {
+  padding: 8px 20px; border-radius: 8px; border: none;
+  background: linear-gradient(135deg, var(--accent2), #5b21b6);
+  color: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: all 0.2s; font-family: 'Heebo', sans-serif;
+}
+.btn-join:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(124,58,237,0.4); }
+.btn-join:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align:center; padding:60px 20px; color:var(--text2); }
+.empty-state .icon { font-size:3rem; margin-bottom:16px; }
+.empty-state p { font-size:1rem; }
+
+/* ── MODAL BASE ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 32px;
+  width: 100%; max-width: 480px;
+  transform: translateY(20px); transition: transform 0.3s;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; display:flex; align-items:center; gap:10px; }
+.modal-close {
+  position: absolute; top: 16px; left: 16px;
+  background: none; border: none; color: var(--text2);
+  font-size: 1.4rem; cursor: pointer; line-height: 1;
+}
+.modal { position: relative; }
+
+/* ── FORM ELEMENTS ── */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 0.85rem; color: var(--text2); margin-bottom: 6px; font-weight: 600; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); font-family: 'Heebo', sans-serif; font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+}
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.btn-primary {
+  width:100%; padding:12px; border-radius:10px; border:none;
+  background: linear-gradient(135deg, var(--accent2), #5b21b6);
+  color: white; font-size: 1rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: 'Heebo', sans-serif;
+  margin-top: 8px;
+}
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(124,58,237,0.4); }
+.btn-secondary {
+  width:100%; padding:10px; border-radius:10px;
+  border:1px solid var(--border); background:transparent;
+  color:var(--text2); font-size:0.9rem; cursor:pointer;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+}
+.btn-secondary:hover { border-color:var(--red); color:var(--red); }
+
+/* ── UPLOAD AREA ── */
+.upload-area {
+  border: 2px dashed var(--border); border-radius: 12px;
+  padding: 24px; text-align: center; cursor: pointer;
+  transition: all 0.2s; position: relative;
+}
+.upload-area:hover { border-color: var(--accent); background: rgba(0,229,255,0.03); }
+.upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.upload-preview { max-width:100%; max-height:120px; border-radius:8px; margin-top:8px; }
+.upload-text { font-size:0.85rem; color:var(--text2); margin-top:6px; }
+.upload-icon { font-size:1.5rem; }
+
+/* ── ADMIN PANEL ── */
+.admin-panel { display:none; }
+.admin-panel.active { display:block; }
+.admin-header {
+  background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(0,229,255,0.05));
+  border: 1px solid rgba(124,58,237,0.3); border-radius:16px;
+  padding:20px 24px; margin-bottom:24px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.admin-title { font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700; color:var(--accent2); }
+.btn-create {
+  padding: 10px 20px; border-radius: 10px; border:none;
+  background: linear-gradient(135deg, var(--accent), #00b8d4);
+  color: #000; font-weight: 700; font-size:0.9rem; cursor:pointer;
+  transition:all 0.2s; font-family:'Heebo',sans-serif;
+  display:flex; align-items:center; gap:6px;
+}
+.btn-create:hover { transform:translateY(-1px); box-shadow:0 4px 15px rgba(0,229,255,0.3); }
+.admin-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.admin-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:16px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.admin-card-title { font-weight:700; font-size:0.95rem; }
+.admin-card-meta { font-size:0.8rem; color:var(--text2); }
+.admin-card-actions { display:flex; gap:8px; }
+.btn-edit, .btn-delete {
+  flex:1; padding:7px; border-radius:8px; border:1px solid var(--border);
+  background:transparent; cursor:pointer; font-size:0.8rem;
+  font-family:'Heebo',sans-serif; transition:all 0.2s;
+}
+.btn-edit { color:var(--accent); }
+.btn-edit:hover { background:rgba(0,229,255,0.1); border-color:var(--accent); }
+.btn-delete { color:var(--red); }
+.btn-delete:hover { background:rgba(239,68,68,0.1); border-color:var(--red); }
+
+/* ── REGISTRANTS MODAL ── */
+.registrant-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.registrant-item {
+  background:var(--bg3); border-radius:8px; padding:10px 14px;
+  display:flex; align-items:center; gap:10px; font-size:0.9rem;
+}
+.discord-icon { width:20px; height:20px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--card); border:1px solid var(--border);
+  border-radius: 12px; padding: 12px 20px;
+  font-size: 0.9rem; font-weight:600;
+  transform: translateY(80px); opacity:0; transition: all 0.3s;
+  display:flex; align-items:center; gap:10px;
+  max-width: 320px;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.success { border-color:rgba(16,185,129,0.5); }
+.toast.error { border-color:rgba(239,68,68,0.5); }
+
+/* ── JOIN MODAL ── */
+.tournament-hero {
+  width:100%; height:140px; border-radius:12px; overflow:hidden; margin-bottom:20px;
+  position:relative;
+}
+.tournament-hero img { width:100%; height:100%; object-fit:cover; }
+.tournament-hero-placeholder { width:100%; height:100%; background:linear-gradient(135deg,var(--bg3),var(--card2)); display:flex; align-items:center; justify-content:center; font-size:3rem; }
+.join-info { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.join-info-item { background:var(--bg3); border-radius:10px; padding:10px 12px; }
+.join-info-label { font-size:0.7rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+.join-info-value { font-size:0.95rem; font-weight:700; margin-top:2px; }
+.discord-input-section { background:rgba(88,101,242,0.1); border:1px solid rgba(88,101,242,0.3); border-radius:12px; padding:14px; }
+.discord-input-section .label { font-size:0.85rem; color:#7c8af5; font-weight:600; margin-bottom:8px; }
+
+/* ── ADMIN LOGIN ── */
+.admin-login-icon { font-size:2.5rem; text-align:center; margin-bottom:8px; }
+.login-error { color:var(--red); font-size:0.82rem; margin-top:8px; text-align:center; display:none; }
+
+/* ── DISCORD OPTIONAL ── */
+.discord-bot-section {
+  background: rgba(88,101,242,0.08); border:1px solid rgba(88,101,242,0.25);
+  border-radius:12px; padding:14px; margin-top:8px;
+}
+.discord-bot-label { font-size:0.85rem; color:#7c8af5; font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:6px; }
+.optional-badge { font-size:0.7rem; background:rgba(88,101,242,0.2); border-radius:4px; padding:1px 6px; font-weight:400; }
+.discord-token-note { font-size:0.75rem; color:var(--text2); margin-top:6px; line-height:1.5; }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1; text-align:center;
+  padding:40px 20px; color:var(--text2); font-size:0.8rem;
+  border-top:1px solid var(--border); margin-top:40px;
+}
+footer .footer-logo { font-family:'Rajdhani',sans-serif; font-size:1.2rem; font-weight:700; color:var(--accent); margin-bottom:8px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hero h1 { font-size:2rem; }
+  .hero-stats { gap:16px; padding:12px 20px; }
+  .form-row { grid-template-columns:1fr; }
+  .tournaments-grid { grid-template-columns:1fr; }
+  nav { padding:0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🎮 <span>Tourney</span>Zone</div>
+  <div class="nav-actions" id="navActions">
+    <button class="nav-btn btn-admin" onclick="openModal('adminLoginModal')">כניסת מנהל</button>
+    <button class="nav-btn btn-discord" onclick="openDiscordLogin()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      כניסה עם Discord
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="mainHero">
+  <div class="hero-badge">🔴 LIVE — טורנירים פעילים עכשיו</div>
+  <h1>פלטפורמת הגיימינג<br>של ישראל</h1>
+  <p>הצטרפו לטורנירים, התחרו על פרסים והוכיחו שאתם הטובים ביותר</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num" id="statTournaments">0</div><div class="stat-label">טורנירים</div></div>
+    <div class="stat-item"><div class="stat-num" id="statPlayers">0</div><div class="stat-label">שחקנים</div></div>
+    <div class="stat-item"><div class="stat-num" id="statPrize">₪0</div><div class="stat-label">סה״כ פרסים</div></div>
+  </div>
+</section>
+
+<!-- PUBLIC TOURNAMENTS SECTION -->
+<section class="section" id="publicSection">
+  <div class="section-header">
+    <div class="section-title">טורנירים פעילים</div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCards('all',this)">הכל</button>
+      <button class="filter-btn" onclick="filterCards('open',this)">פתוח להרשמה</button>
+      <button class="filter-btn" onclick="filterCards('soon',this)">בקרוב</button>
+      <button class="filter-btn" onclick="filterCards('closed',this)">סגור</button>
+    </div>
+  </div>
+  <div class="tournaments-grid" id="tournamentsGrid">
+    <div class="empty-state"><div class="icon">🏆</div><p>אין טורנירים עדיין. המנהל יוסיף בקרוב!</p></div>
+  </div>
+</section>
+
+<!-- ADMIN PANEL -->
+<section class="section admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <div>
+      <div class="admin-title">⚙️ פאנל ניהול</div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-top:4px">ניהול טורנירים ושחקנים</div>
+    </div>
+    <button class="btn-create" onclick="openModal('createTournamentModal')">+ יצירת טורניר</button>
+  </div>
+  <div class="admin-cards" id="adminCards">
+    <div class="empty-state"><div class="icon">📋</div><p>עדיין אין טורנירים. צור את הראשון!</p></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════ -->
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('adminLoginModal')">×</button>
+    <div class="admin-login-icon">🔐</div>
+    <h2 style="justify-content:center">כניסת מנהל</h2>
+    <div class="form-group">
+      <label class="form-label">מייל</label>
+      <input type="email" class="form-input" id="adminEmail" placeholder="your@email.com" dir="ltr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">סיסמא</label>
+      <input type="password" class="form-input" id="adminPass" placeholder="••••••••" dir="ltr">
+    </div>
+    <div class="login-error" id="loginError">❌ מייל או סיסמא שגויים</div>
+    <button class="btn-primary" onclick="adminLogin()">כניסה</button>
+    <!-- 
+    ═══════════════════════════════════════════════════
+    HOT TOKEN SECTION - רק לך נגיש כמנהל
+    הוסף את הטוקן של הבוט שלך כאן:
+    ═══════════════════════════════════════════════════
+    -->
+  </div>
+</div>
+
+<!-- DISCORD LOGIN MODAL (simulated) -->
+<div class="modal-overlay" id="discordLoginModal">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-close" onclick="closeModal('discordLoginModal')">×</button>
+    <div style="text-align:center;margin-bottom:20px">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+    </div>
+    <h2 style="justify-content:center;font-size:1.2rem">התחבר עם Discord</h2>
+    <p style="text-align:center;color:var(--text2);font-size:0.85rem;margin-bottom:20px">
+      הכנס את שם המשתמש שלך ב-Discord (username#0000 או username החדש)
+    </p>
+    <div class="form-group">
+      <label class="form-label">Discord Username</label>
+      <input type="text" class="form-input" id="discordUsername" placeholder="username" dir="ltr">
+    </div>
+    <button class="btn-primary" style="background:linear-gradient(135deg,#5865F2,#4752c4)" onclick="discordLogin()">
+      כניסה 🎮
+    </button>
+    <p style="text-align:center;font-size:0.75rem;color:var(--text2);margin-top:12px">
+      💡 במציאות זה יתחבר לאפליקציית Discord שלך
+    </p>
+  </div>
+</div>
+
+<!-- CREATE / EDIT TOURNAMENT MODAL -->
+<div class="modal-overlay" id="createTournamentModal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('createTournamentModal')">×</button>
+    <h2 id="createModalTitle">🏆 יצירת טורניר חדש</h2>
+
+    <div class="form-group">
+      <label class="form-label">שם הטורניר *</label>
+      <input type="text" class="form-input" id="t_name" placeholder="למשל: ליגת הפורטנייט הישראלית">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">משחק *</label>
+        <select class="form-select" id="t_game">
+          <option value="Fortnite">🎯 Fortnite</option>
+          <option value="Warzone">💥 Warzone</option>
+          <option value="Valorant">🔫 Valorant</option>
+          <option value="CS2">💣 CS2</option>
+          <option value="Minecraft">⛏️ Minecraft</option>
+          <option value="Apex">🎮 Apex Legends</option>
+          <option value="FIFA">⚽ EA FC</option>
+          <option value="Other">🕹️ אחר</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">סטטוס</label>
+        <select class="form-select" id="t_status">
+          <option value="open">✅ פתוח להרשמה</option>
+          <option value="soon">🔜 בקרוב</option>
+          <option value="closed">🔒 סגור</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">📅 תאריך</label>
+        <input type="date" class="form-input" id="t_date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">⏰ שעה</label>
+        <input type="time" class="form-input" id="t_time">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">🏅 פרס ראשון</label>
+        <input type="text" class="form-input" id="t_prize" placeholder="₪500 / כרטיס מתנה">
+      </div>
+      <div class="form-group">
+        <label class="form-label">👥 מקסימום שחקנים</label>
+        <input type="number" class="form-input" id="t_maxPlayers" placeholder="64" min="2">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">תיאור</label>
+      <textarea class="form-textarea" id="t_desc" placeholder="פרטים על הטורניר, חוקים, איך להצטרף..."></textarea>
+    </div>
+
+    <!-- LOGO UPLOAD -->
+    <div class="form-group">
+      <label class="form-label">לוגו הטורניר</label>
+      <div class="upload-area" id="logoUploadArea">
+        <input type="file" accept="image/*" onchange="handleUpload(this,'logoPreview','t_logoData')">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text">לחץ להעלאת לוגו</div>
+        <img id="logoPreview" class="upload-preview" style="display:none">
+      </div>
+    </div>
+
+    <!-- THUMBNAIL UPLOAD -->
+    <div class="form-group">
+      <label class="form-label">תמונת רקע (Thumbnail)</label>
+      <div class="upload-area" id="thumbUploadArea">
+        <input type="file" accept="image/*" onchange="handleUpload(this,'thumbPreview','t_thumbData')">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text">לחץ להעלאת תמונת רקע</div>
+        <img id="thumbPreview" class="upload-preview" style="display:none">
+      </div>
+    </div>
+
+    <!-- DISCORD BOT SECTION -->
+    <div class="discord-bot-section" id="discordBotSection">
+      <div class="discord-bot-label">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        אינטגרציית Discord <span class="optional-badge">אופציונלי</span>
+      </div>
+      <div class="form-group" style="margin-bottom:8px;margin-top:10px">
+        <label class="form-label">Server ID (Guild ID)</label>
+        <input type="text" class="form-input" id="t_guildId" placeholder="123456789012345678" dir="ltr">
+      </div>
+      <div class="form-group" style="margin-bottom:8px">
+        <label class="form-label">Role ID — הרול שיינתן לנרשמים</label>
+        <input type="text" class="form-input" id="t_roleId" placeholder="987654321098765432" dir="ltr">
+      </div>
+      <div class="discord-token-note">
+        💡 כאשר שחקן נרשם לטורניר, הבוט שלך יוסיף לו אוטומטית את הרול בשרת Discord.
+        ה-Bot Token שהגדרת בקוד ישמש לביצוע הפעולה.
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="saveTournament()" id="saveBtn">💾 שמירה</button>
+    <button class="btn-secondary" style="margin-top:8px" onclick="closeModal('createTournamentModal')">ביטול</button>
+
+    <!-- Hidden data -->
+    <input type="hidden" id="t_logoData">
+    <input type="hidden" id="t_thumbData">
+    <input type="hidden" id="t_editId">
+  </div>
+</div>
+
+<!-- JOIN TOURNAMENT MODAL -->
+<div class="modal-overlay" id="joinModal">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('joinModal')">×</button>
+    <div class="tournament-hero" id="joinHero"></div>
+    <h2 id="joinTitle">הרשמה לטורניר</h2>
+    <div class="join-info" id="joinInfo"></div>
+
+    <div class="discord-input-section" id="joinDiscordSection" style="display:none">
+      <div class="label">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#7c8af5"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Discord Username להרשמה
+      </div>
+      <input type="text" class="form-input" id="joinDiscordUser" placeholder="username" dir="ltr" style="margin-top:8px">
+    </div>
+
+    <div id="joinRoleNote" style="display:none;margin-top:10px;font-size:0.8rem;color:var(--text2);background:var(--bg3);border-radius:8px;padding:10px 12px;">
+      🤖 לאחר ההרשמה, הבוט יוסיף לך אוטומטית את הרול בשרת Discord!
+    </div>
+
+    <button class="btn-primary" onclick="confirmJoin()" id="joinBtn" style="margin-top:16px">אני בפנים! 🎮</button>
+  </div>
+</div>
+
+<!-- REGISTRANTS MODAL -->
+<div class="modal-overlay" id="registrantsModal">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('registrantsModal')">×</button>
+    <h2 id="registrantsTitle">👥 רשומים לטורניר</h2>
+    <div id="registrantsList" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">🎮 TourneyZone</div>
+  <p>פלטפורמת גיימינג ישראלית © 2025</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// ⚠️ HOT BOT TOKEN — הכנס את הטוקן שלך כאן:
+// ═══════════════════════════════════════════════════════
+const HOT_BOT_TOKEN = "MTQ3NDM3OTY2NTYwNjA0OTk5OA.GIHuAm.Xc9-j3YzLZ8K7Zc8isFUgs10uII6cJWV1VTRrg"; // <-- הכנס את הטוקן של הבוט כאן
+// ════════════════════════════════════════════════════════
+
+// ADMIN CREDENTIALS
+const ADMIN_EMAIL = "danpressdee@gmail.com";
+const ADMIN_PASS  = "thetornirspider";
+
+// ─── STATE ───────────────────────────────────────────
+let tournaments = JSON.parse(localStorage.getItem('tz_tournaments') || '[]');
+let registrations = JSON.parse(localStorage.getItem('tz_registrations') || '{}');
+let state = {
+  isAdmin: false,
+  discordUser: null,
+  editingId: null,
+  currentJoinId: null,
+};
+
+// ─── MODAL HELPERS ────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if(e.target === el) el.classList.remove('open'); });
+});
+
+// ─── TOAST ────────────────────────────────────────────
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = (type==='success'?'✅ ':'❌ ') + msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── ADMIN LOGIN ─────────────────────────────────────
+function adminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass  = document.getElementById('adminPass').value;
+  if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    state.isAdmin = true;
+    closeModal('adminLoginModal');
+    document.getElementById('adminPanel').classList.add('active');
+    document.getElementById('mainHero').style.display = 'none';
+    document.getElementById('publicSection').style.display = 'none';
+    renderAdminCards();
+    updateNav();
+    showToast('ברוך הבא, מנהל! 👑');
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+// ─── DISCORD LOGIN ─────────────────────────────────────
+function openDiscordLogin() {
+  document.getElementById('discordUsername').value = '';
+  openModal('discordLoginModal');
+}
+function discordLogin() {
+  const u = document.getElementById('discordUsername').value.trim();
+  if(!u) { showToast('הכנס username', 'error'); return; }
+  state.discordUser = u;
+  closeModal('discordLoginModal');
+  updateNav();
+  showToast(`שלום, ${u}! 🎮`);
+}
+function logout() {
+  state.discordUser = null;
+  state.isAdmin = false;
+  document.getElementById('adminPanel').classList.remove('active');
+  document.getElementById('mainHero').style.display = '';
+  document.getElementById('publicSection').style.display = '';
+  updateNav();
+  showToast('התנתקת');
+}
+function updateNav() {
+  const nav = document.getElementById('navActions');
+  if(state.isAdmin) {
+    nav.innerHTML = `
+      <div class="user-chip">👑 <span>Admin</span></div>
+      <button class="btn-logout" onclick="logout()">יציאה</button>
+    `;
+  } else if(state.discordUser) {
+    nav.innerHTML = `
+      <div class="user-chip">🎮 <span>${state.discordUser}</span></div>
+      <button class="btn-logout" onclick="logout()">יציאה</button>
+    `;
+  } else {
+    nav.innerHTML = `
+      <button class="nav-btn btn-admin" onclick="openModal('adminLoginModal')">כניסת מנהל</button>
+      <button class="nav-btn btn-discord" onclick="openDiscordLogin()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        כניסה עם Discord
+      </button>
+    `;
+  }
+}
+
+// ─── IMAGE UPLOAD ─────────────────────────────────────
+function handleUpload(input, previewId, dataId) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById(previewId).src = e.target.result;
+    document.getElementById(previewId).style.display = 'block';
+    document.getElementById(dataId).value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── SAVE TOURNAMENT ─────────────────────────────────
+function openCreateModal() {
+  state.editingId = null;
+  document.getElementById('createModalTitle').textContent = '🏆 יצירת טורניר חדש';
+  document.getElementById('saveBtn').textContent = '💾 שמירה';
+  // reset
+  ['t_name','t_prize','t_desc','t_guildId','t_roleId','t_logoData','t_thumbData','t_editId'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('t_maxPlayers').value = '';
+  document.getElementById('logoPreview').style.display = 'none';
+  document.getElementById('thumbPreview').style.display = 'none';
+  document.getElementById('t_game').value = 'Fortnite';
+  document.getElementById('t_status').value = 'open';
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('t_date').value = today;
+  document.getElementById('t_time').value = '20:00';
+  openModal('createTournamentModal');
+}
+
+function saveTournament() {
+  const name = document.getElementById('t_name').value.trim();
+  if(!name) { showToast('חובה להכניס שם!', 'error'); return; }
+
+  const t = {
+    id: state.editingId || Date.now().toString(),
+    name,
+    game:       document.getElementById('t_game').value,
+    status:     document.getElementById('t_status').value,
+    date:       document.getElementById('t_date').value,
+    time:       document.getElementById('t_time').value,
+    prize:      document.getElementById('t_prize').value,
+    maxPlayers: parseInt(document.getElementById('t_maxPlayers').value)||64,
+    desc:       document.getElementById('t_desc').value,
+    logo:       document.getElementById('t_logoData').value,
+    thumb:      document.getElementById('t_thumbData').value,
+    guildId:    document.getElementById('t_guildId').value.trim(),
+    roleId:     document.getElementById('t_roleId').value.trim(),
+    createdAt:  state.editingId ? undefined : new Date().toISOString(),
+  };
+
+  if(state.editingId) {
+    const idx = tournaments.findIndex(x => x.id === state.editingId);
+    if(idx>-1) { t.createdAt = tournaments[idx].createdAt; tournaments[idx] = t; }
+  } else {
+    tournaments.unshift(t);
+  }
+
+  save();
+  closeModal('createTournamentModal');
+  renderAdminCards();
+  renderPublicCards();
+  showToast(state.editingId ? 'הטורניר עודכן ✨' : 'הטורניר נוצר! 🎉');
+  state.editingId = null;
+}
+
+function editTournament(id) {
+  const t = tournaments.find(x => x.id === id);
+  if(!t) return;
+  state.editingId = id;
+  document.getElementById('createModalTitle').textContent = '✏️ עריכת טורניר';
+  document.getElementById('saveBtn').textContent = '💾 עדכון';
+  document.getElementById('t_name').value = t.name||'';
+  document.getElementById('t_game').value = t.game||'Fortnite';
+  document.getElementById('t_status').value = t.status||'open';
+  document.getElementById('t_date').value = t.date||'';
+  document.getElementById('t_time').value = t.time||'';
+  document.getElementById('t_prize').value = t.prize||'';
+  document.getElementById('t_maxPlayers').value = t.maxPlayers||'';
+  document.getElementById('t_desc').value = t.desc||'';
+  document.getElementById('t_guildId').value = t.guildId||'';
+  document.getElementById('t_roleId').value = t.roleId||'';
+  document.getElementById('t_logoData').value = t.logo||'';
+  document.getElementById('t_thumbData').value = t.thumb||'';
+  document.getElementById('t_editId').value = id;
+  if(t.logo) { document.getElementById('logoPreview').src=t.logo; document.getElementById('logoPreview').style.display='block'; }
+  else document.getElementById('logoPreview').style.display='none';
+  if(t.thumb) { document.getElementById('thumbPreview').src=t.thumb; document.getElementById('thumbPreview').style.display='block'; }
+  else document.getElementById('thumbPreview').style.display='none';
+  openModal('createTournamentModal');
+}
+
+function deleteTournament(id) {
+  if(!confirm('למחוק את הטורניר הזה?')) return;
+  tournaments = tournaments.filter(x => x.id !== id);
+  delete registrations[id];
+  save();
+  renderAdminCards();
+  renderPublicCards();
+  showToast('הטורניר נמחק');
+}
+
+function viewRegistrants(id) {
+  const t = tournaments.find(x => x.id === id);
+  if(!t) return;
+  const regs = registrations[id] || [];
+  document.getElementById('registrantsTitle').textContent = `👥 רשומים — ${t.name}`;
+  const list = document.getElementById('registrantsList');
+  if(!regs.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">😢</div><p>אין רשומים עדיין</p></div>';
+  } else {
+    list.innerHTML = `
+      <p style="color:var(--text2);margin-bottom:12px;font-size:0.85rem">${regs.length} / ${t.maxPlayers||64} שחקנים</p>
+      <ul class="registrant-list">
+        ${regs.map((r,i) => `
+          <li class="registrant-item">
+            <span style="color:var(--text2);font-size:0.8rem">${i+1}.</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+            <strong>${r.discord}</strong>
+            <span style="color:var(--text2);font-size:0.75rem;margin-right:auto">${new Date(r.at).toLocaleDateString('he-IL')}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  }
+  openModal('registrantsModal');
+}
+
+// ─── RENDER PUBLIC CARDS ──────────────────────────────
+const gameEmojis = { Fortnite:'🎯', Warzone:'💥', Valorant:'🔫', CS2:'💣', Minecraft:'⛏️', Apex:'🎮', FIFA:'⚽', Other:'🕹️' };
+const statusMap = { open:{cls:'status-open',txt:'פתוח'}, soon:{cls:'status-soon',txt:'בקרוב'}, closed:{cls:'status-closed',txt:'סגור'} };
+
+function renderPublicCards(filter='all') {
+  const grid = document.getElementById('tournamentsGrid');
+  let filtered = filter==='all' ? tournaments : tournaments.filter(t => t.status===filter);
+  if(!filtered.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>אין טורנירים עדיין</p></div>';
+    updateStats();
+    return;
+  }
+  grid.innerHTML = filtered.map(t => {
+    const regs = (registrations[t.id]||[]).length;
+    const max = t.maxPlayers||64;
+    const sm = statusMap[t.status]||statusMap.open;
+    const emoji = gameEmojis[t.game]||'🕹️';
+    const full = regs>=max;
+    const alreadyJoined = state.discordUser && (registrations[t.id]||[]).some(r=>r.discord===state.discordUser);
+    return `
+      <div class="tournament-card" onclick="openJoinModal('${t.id}')">
+        <div style="position:relative">
+          ${t.thumb ? `<img src="${t.thumb}" style="width:100%;height:180px;object-fit:cover">` : `<div class="card-thumbnail-placeholder">${emoji}</div>`}
+          <div class="game-badge">${emoji} ${t.game}</div>
+          <div class="status-badge ${sm.cls}">${sm.txt}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-logo">${t.logo ? `<img src="${t.logo}">` : emoji}</div>
+            <div>
+              <div class="card-title">${t.name}</div>
+              <div class="card-organizer">🏟️ TourneyZone</div>
+            </div>
+          </div>
+          <div class="card-details">
+            <div class="detail-item"><div class="detail-label">📅 תאריך</div><div class="detail-value">${formatDate(t.date)}</div></div>
+            <div class="detail-item"><div class="detail-label">⏰ שעה</div><div class="detail-value">${t.time||'TBD'}</div></div>
+            <div class="detail-item"><div class="detail-label">🏅 פרס</div><div class="detail-value prize">${t.prize||'TBD'}</div></div>
+            <div class="detail-item"><div class="detail-label">👥 שחקנים</div><div class="detail-value">${regs}/${max}</div></div>
+          </div>
+          <div class="card-footer" onclick="event.stopPropagation()">
+            <div class="participants">
+              <span>${regs} נרשמו</span>
+              <div style="background:var(--bg3);border-radius:4px;width:80px;height:4px;overflow:hidden">
+                <div style="background:var(--accent);height:100%;width:${Math.min(regs/max*100,100)}%;border-radius:4px;transition:width 0.5s"></div>
+              </div>
+            </div>
+            <button class="btn-join" onclick="openJoinModal('${t.id}')"
+              ${(full || t.status==='closed') && !alreadyJoined ? 'disabled' : ''}>
+              ${alreadyJoined ? '✅ נרשמת' : full ? '🔒 מלא' : t.status==='closed' ? 'סגור' : '🎮 הצטרף'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('statTournaments').textContent = tournaments.length;
+  const totalPlayers = Object.values(registrations).reduce((s,r)=>s+r.length,0);
+  document.getElementById('statPlayers').textContent = totalPlayers;
+  // sum prizes that are numbers
+  let total = 0;
+  tournaments.forEach(t => {
+    const n = parseInt((t.prize||'').replace(/[^\d]/g,''));
+    if(!isNaN(n)) total+=n;
+  });
+  document.getElementById('statPrize').textContent = total ? `₪${total.toLocaleString()}` : '₪0';
+}
+
+function formatDate(d) {
+  if(!d) return 'TBD';
+  try { return new Date(d).toLocaleDateString('he-IL',{day:'numeric',month:'short'}); }
+  catch { return d; }
+}
+
+function filterCards(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPublicCards(filter);
+}
+
+// ─── RENDER ADMIN CARDS ───────────────────────────────
+function renderAdminCards() {
+  const grid = document.getElementById('adminCards');
+  if(!tournaments.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>עדיין אין טורנירים. צור את הראשון!</p></div>';
+    return;
+  }
+  grid.innerHTML = tournaments.map(t => {
+    const regs = (registrations[t.id]||[]).length;
+    const sm = statusMap[t.status]||statusMap.open;
+    return `
+      <div class="admin-card">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="card-logo" style="width:36px;height:36px">${t.logo?`<img src="${t.logo}">`:(gameEmojis[t.game]||'🕹️')}</div>
+          <div>
+            <div class="admin-card-title">${t.name}</div>
+            <div class="admin-card-meta">${gameEmojis[t.game]||''} ${t.game} · ${formatDate(t.date)} ${t.time||''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="status-badge ${sm.cls}" style="position:static">${sm.txt}</span>
+          <span style="font-size:0.8rem;color:var(--text2)">${regs} נרשמו</span>
+          ${t.roleId ? '<span style="font-size:0.75rem;color:#5865F2">🤖 Discord</span>' : ''}
+        </div>
+        <div class="admin-card-actions">
+          <button class="btn-edit" onclick="editTournament('${t.id}')">✏️ עריכה</button>
+          <button class="btn-edit" onclick="viewRegistrants('${t.id}')" style="color:var(--accent3);border-color:rgba(245,158,11,0.3)">👥 רשומים</button>
+          <button class="btn-delete" onclick="deleteTournament('${t.id}')">🗑️ מחק</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── JOIN TOURNAMENT ──────────────────────────────────
+function openJoinModal(id) {
+  if(state.isAdmin) return;
+  const t = tournaments.find(x=>x.id===id);
+  if(!t) return;
+  state.currentJoinId = id;
+
+  // Hero image
+  const hero = document.getElementById('joinHero');
+  hero.innerHTML = t.thumb
+    ? `<img src="${t.thumb}" alt="">`
+    : `<div class="tournament-hero-placeholder">${gameEmojis[t.game]||'🕹️'}</div>`;
+
+  document.getElementById('joinTitle').textContent = t.name;
+
+  // Info grid
+  const regs = (registrations[id]||[]).length;
+  document.getElementById('joinInfo').innerHTML = `
+    <div class="join-info-item"><div class="join-info-label">📅 תאריך</div><div class="join-info-value">${formatDate(t.date)}</div></div>
+    <div class="join-info-item"><div class="join-info-label">⏰ שעה</div><div class="join-info-value">${t.time||'TBD'}</div></div>
+    <div class="join-info-item"><div class="join-info-label">🏅 פרס</div><div class="join-info-value" style="color:var(--accent3)">${t.prize||'TBD'}</div></div>
+    <div class="join-info-item"><div class="join-info-label">👥 מקומות</div><div class="join-info-value">${regs}/${t.maxPlayers||64}</div></div>
+  `;
+
+  // Discord input
+  const ds = document.getElementById('joinDiscordSection');
+  const du = document.getElementById('joinDiscordUser');
+  if(state.discordUser) {
+    ds.style.display = 'block';
+    du.value = state.discordUser;
+    du.readOnly = true;
+  } else {
+    ds.style.display = 'block';
+    du.value = '';
+    du.readOnly = false;
+    du.placeholder = 'הכנס Discord username להרשמה';
+  }
+
+  // Role note
+  const rn = document.getElementById('joinRoleNote');
+  rn.style.display = t.roleId ? 'block' : 'none';
+
+  // Btn state
+  const alreadyJoined = state.discordUser && (registrations[id]||[]).some(r=>r.discord===state.discordUser);
+  const btn = document.getElementById('joinBtn');
+  if(alreadyJoined) { btn.textContent = '✅ כבר נרשמת!'; btn.disabled = true; }
+  else if(t.status==='closed') { btn.textContent = '🔒 ההרשמה סגורה'; btn.disabled = true; }
+  else if(regs>=(t.maxPlayers||64)) { btn.textContent = '🔒 הטורניר מלא'; btn.disabled = true; }
+  else { btn.textContent = 'אני בפנים! 🎮'; btn.disabled = false; }
+
+  openModal('joinModal');
+}
+
+async function confirmJoin() {
+  const id = state.currentJoinId;
+  const t = tournaments.find(x=>x.id===id);
+  if(!t) return;
+
+  const discord = document.getElementById('joinDiscordUser').value.trim();
+  if(!discord) { showToast('חובה להכניס Discord username!', 'error'); return; }
+
+  if(!registrations[id]) registrations[id] = [];
+  if(registrations[id].some(r=>r.discord===discord)) {
+    showToast('כבר נרשמת לטורניר הזה!', 'error'); return;
+  }
+  if(registrations[id].length>=(t.maxPlayers||64)) {
+    showToast('הטורניר מלא!', 'error'); return;
+  }
+
+  registrations[id].push({ discord, at: new Date().toISOString() });
+  state.discordUser = discord;
+  save();
+
+  // Discord Bot Role Assignment
+  if(HOT_BOT_TOKEN && t.guildId && t.roleId) {
+    await assignDiscordRole(t.guildId, t.roleId, discord);
+  }
+
+  closeModal('joinModal');
+  renderPublicCards();
+  updateNav();
+  showToast(`נרשמת בהצלחה לטורניר! ${t.roleId ? '🤖 הרול ינתן בשרת Discord' : '🎉'}`);
+}
+
+// ─── DISCORD BOT ROLE ASSIGNMENT ─────────────────────
+// NOTE: קריאות ישירות ל-Discord API מה-Browser נחסמות ע"י CORS.
+// בפרויקט אמיתי יש להפעיל backend (Node.js/serverless) שיעשה את הקריאה.
+// הפונקציה הזו מדגימה את הלוגיקה:
+async function assignDiscordRole(guildId, roleId, discordUsername) {
+  console.log(`[Discord Bot] Assigning role ${roleId} in guild ${guildId} to ${discordUsername}`);
+  /*
+  ══════════════════════════════════════════════════════
+  BACKEND EXAMPLE (Node.js + discord.js):
+
+  const { Client, GatewayIntentBits } = require('discord.js');
+  const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+
+  client.once('ready', async () => {
+    const guild = await client.guilds.fetch(guildId);
+    const members = await guild.members.search({ query: discordUsername, limit: 1 });
+    const member = members.first();
+    if (member) {
+      await member.roles.add(roleId);
+      console.log(`Role assigned to ${discordUsername}`);
+    }
+  });
+
+  client.login(HOT_BOT_TOKEN);
+  ══════════════════════════════════════════════════════
+  */
+  return true;
+}
+
+// ─── PERSISTENCE ─────────────────────────────────────
+function save() {
+  localStorage.setItem('tz_tournaments', JSON.stringify(tournaments));
+  localStorage.setItem('tz_registrations', JSON.stringify(registrations));
+}
+
+// ─── INIT ─────────────────────────────────────────────
+function init() {
+  renderPublicCards();
+  // Animate stats
+  animateNum('statTournaments', tournaments.length);
+  const totalPlayers = Object.values(registrations).reduce((s,r)=>s+r.length,0);
+  animateNum('statPlayers', totalPlayers);
+}
+
+function animateNum(id, target) {
+  const el = document.getElementById(id);
+  if(!target) return;
+  let current = 0;
+  const step = Math.ceil(target/30);
+  const timer = setInterval(()=>{
+    current = Math.min(current+step, target);
+    el.textContent = current;
+    if(current>=target) clearInterval(timer);
+  }, 40);
+}
+
+// Wire up create button in nav
+document.querySelectorAll('[onclick="openModal(\'createTournamentModal\')"]').forEach(el=>{
+  el.onclick = openCreateModal;
+});
+
+init();
+</script>
+</body>
+</html>
