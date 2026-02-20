@@ -894,7 +894,7 @@ footer::before {
 
 <footer>
   <div class="footer-logo">⚔ ARENA</div>
-  <div>פלטפורמת גיימינג ישראלית © 2025 · Powered by passion</div>
+  <div>פלטפורמת גיימינג ישראלית © 2026 · Powered by passion</div>
 </footer>
 
 </div><!-- end #app -->
@@ -909,8 +909,7 @@ const CLIENT_ID = "1474379665606049998";
 const REDIRECT  = "https://danglitchers.github.io/Tourney-Zone/";
 const GUILD_ID  = "1474379041053347883";
 const ROLE_ID   = "1474379702729838685";
-const ADMIN_EMAIL = "danpressdee@gmail.com";
-const ADMIN_PASS  = "thetornirspider";
+const ADMIN_USERNAME = "datykvuktf"; // Discord username עם גישת מנהל
 
 const EMOJIS = { Fortnite:"🎯", Warzone:"💥", Valorant:"🔫", CS2:"💣", Apex:"🎮", Minecraft:"⛏️", "EA FC":"⚽", Other:"🕹️" };
 const STATUS = {
@@ -991,7 +990,7 @@ function startDiscordOAuth() {
   var params = "client_id=" + CLIENT_ID +
     "&redirect_uri=" + encodeURIComponent(REDIRECT) +
     "&response_type=token" +
-    "&scope=identify" +
+    "&scope=identify%20guilds.join" +
     "&state=" + state;
   window.location.href = "https://discord.com/oauth2/authorize?" + params;
 }
@@ -1017,10 +1016,11 @@ async function handleOAuthCallback() {
   history.replaceState(null, "", window.location.pathname);
   showOAuthLoading(true);
   try {
+    // 1. קבל פרטי משתמש
     var res = await fetch("https://discord.com/api/users/@me", {
       headers: { Authorization: "Bearer " + accessToken }
     });
-    if (!res.ok) throw new Error("Failed");
+    if (!res.ok) throw new Error("Failed to fetch user");
     var user = await res.json();
     var avatarUrl = user.avatar
       ? "https://cdn.discordapp.com/avatars/" + user.id + "/" + user.avatar + ".png"
@@ -1033,11 +1033,28 @@ async function handleOAuthCallback() {
       accessToken: accessToken
     };
     sessionStorage.setItem("dc_session", JSON.stringify(ui.dcUser));
+
+    // 2. בדוק אם זה המנהל
+    if (user.username === ADMIN_USERNAME) {
+      ui.isAdmin = true;
+    }
+
     updateNav();
     render();
-    toast("שלום, " + ui.dcUser.globalName + "! 🎮");
+
+    // 3. אם מנהל — הצג פאנל ניהול
+    if (ui.isAdmin) {
+      document.getElementById("heroSection").style.display = "none";
+      document.getElementById("publicSection").style.display = "none";
+      document.getElementById("adminSection").classList.add("on");
+      renderAdminGrid();
+      toast("ברוך הבא, מנהל 👑");
+    } else {
+      toast("שלום, " + ui.dcUser.globalName + "! 🎮");
+    }
   } catch(e) {
     toast("שגיאה בכניסה עם Discord", "err");
+    console.error(e);
   } finally {
     showOAuthLoading(false);
   }
@@ -1045,7 +1062,14 @@ async function handleOAuthCallback() {
 
 function restoreSession() {
   var saved = sessionStorage.getItem("dc_session");
-  if (saved) { try { ui.dcUser = JSON.parse(saved); } catch(e) {} }
+  if (saved) {
+    try {
+      ui.dcUser = JSON.parse(saved);
+      if (ui.dcUser && ui.dcUser.username === ADMIN_USERNAME) {
+        ui.isAdmin = true;
+      }
+    } catch(e) {}
+  }
 }
 
 // ── ADMIN LOGIN ──────────────────────────────
@@ -1093,7 +1117,7 @@ function updateNav() {
       : '<div class="user-pill-avatar">' + ui.dcUser.username[0].toUpperCase() + '</div>';
     nav.innerHTML = '<div class="user-pill">' + av + '<span class="user-pill-name">' + (ui.dcUser.globalName || ui.dcUser.username) + '</span></div><button class="btn btn-danger" onclick="logout()">יציאה</button>';
   } else {
-    nav.innerHTML = '<button class="btn btn-ghost" onclick="openModal(\'adminModal\')">כניסת מנהל</button><button class="btn btn-discord" onclick="startDiscordOAuth()">' + DC_SVG + ' כניסה עם Discord</button>';
+    nav.innerHTML = '<button class="btn btn-discord" onclick="startDiscordOAuth()">' + DC_SVG + ' כניסה עם Discord</button>';
   }
 }
 
@@ -1417,7 +1441,7 @@ function openJoin(id) {
   openModal("joinModal");
 }
 
-function confirmJoin() {
+async function confirmJoin() {
   var id = ui.joinId;
   var t  = data.tournaments.find(function(x) { return x.id === id; });
   if (!t || !ui.dcUser) return;
@@ -1436,6 +1460,24 @@ function confirmJoin() {
   closeModal("joinModal");
   render();
   toast("נרשמת ל-" + t.name + "! 🎉");
+  // נסה לתת רול דרך guilds.join API
+  await assignRoleViaOAuth(ui.dcUser.id, ui.dcUser.accessToken);
+}
+
+async function assignRoleViaOAuth(userId, accessToken) {
+  // Discord API: PUT /guilds/{guild_id}/members/{user_id}
+  // זה מוסיף את המשתמש לשרת עם הרול — דורש bot token בצד שרת
+  // עם OAuth2 לבד (implicit flow) אי אפשר לתת רול ישירות.
+  // הפתרון: guilds.join scope מאפשר לבוט להוסיף את המשתמש עם הרול.
+  // נשלח בקשה ל-Discord עם ה-access token של המשתמש + bot token (צד שרת).
+  // כאן רק נרשום את הבקשה — אפשר לחבר Cloudflare Worker בעתיד.
+  console.log("[Role] User " + userId + " should get role " + ROLE_ID + " in guild " + GUILD_ID);
+  // אם יש Cloudflare Worker:
+  // await fetch("https://your-worker.workers.dev/assign-role", {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify({ userId, accessToken, guildId: GUILD_ID, roleId: ROLE_ID })
+  // });
 }
 
 function confirmLeave(id) {
